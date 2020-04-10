@@ -1390,6 +1390,16 @@ void IotMqtt_Disconnect( IotMqttConnection_t mqttConnection,
         }
     }
 
+    /* Check assumptions required for memory safety */
+    if( mqttConnection == NULL ||
+	mqttConnection->references <= 0 ||
+	mqttConnection->pNetworkInterface == NULL ||
+	mqttConnection->pNetworkInterface->send == NULL ||
+	mqttConnection->pNetworkInterface->destroy == NULL )
+    {
+        status = IOT_MQTT_BAD_PARAMETER;
+    }
+
     if( status == IOT_MQTT_SUCCESS )
     {
         /* Read the connection status. */
