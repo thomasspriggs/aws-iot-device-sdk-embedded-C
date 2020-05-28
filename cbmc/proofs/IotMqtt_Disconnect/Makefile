@@ -1,22 +1,24 @@
 ENTRY=IotMqtt_Disconnect
 
+CBMCFLAGS  += --verbosity 10 --flush
+
 ################################################################
 # Proof assumptions
 
 # Bound the number of subscriptions in a list (BOUND = MAX-1)
-SUBSCRIPTION_COUNT_MAX=2
+SUBSCRIPTION_COUNT_MAX=4
 DEF += -DSUBSCRIPTION_COUNT_MAX=$(SUBSCRIPTION_COUNT_MAX)
 
 # Bound the number of operations in a list (BOUND = MAX-1)
-OPERATION_COUNT_MAX=2
+OPERATION_COUNT_MAX=4
 DEF += -DOPERATION_COUNT_MAX=$(OPERATION_COUNT_MAX)
 
 # Bound the length of subscription topics (BOUND = MAX-1)
-TOPIC_LENGTH_MAX=8
+TOPIC_LENGTH_MAX=20
 DEF += -DTOPIC_LENGTH_MAX=$(TOPIC_LENGTH_MAX)
 
 # A constant that should be 2*SUBSCRIPTION_COUNT_MAX-1
-SUBSCRIPTION_LIST_MAX=3
+SUBSCRIPTION_LIST_MAX=7
 DEF += -DSUBSCRIPTION_LIST_MAX=$(SUBSCRIPTION_LIST_MAX)
 
 ################################################################
@@ -40,7 +42,7 @@ ABSTRACTIONS += --remove-function-body IotLog_Generic
 
 # Functions removed as manually proven to be unreachable
 ABSTRACTIONS += --remove-function-body _IotMqtt_PublishSetDup
-ABSTRACTIONS += --remove-function-body _IotMqtt_RemoveSubscriptionByPacket
+#ABSTRACTIONS += --remove-function-body _IotMqtt_RemoveSubscriptionByPacket
 ABSTRACTIONS += --remove-function-body _IotMqtt_ScheduleOperation
 ABSTRACTIONS += --remove-function-body _checkRetryLimit
 ABSTRACTIONS += --remove-function-body _completePendingSend
@@ -65,15 +67,15 @@ ABSTRACTIONS += --remove-function-body _topicMatch
 ################################################################
 # Stub out list remove functions.
 
-DEF += -DCBMC_STUB_REMOVEALL=1
-DEF += -DCBMC_STUB_REMOVEALLMATCHES=1
+#DEF += -DCBMC_STUB_REMOVEALL=1
+#DEF += -DCBMC_STUB_REMOVEALLMATCHES=1
 
 ################################################################
 
 OBJS += $(ENTRY)_harness.goto
 OBJS += $(MQTT)/cbmc/proofs/mqtt_state.goto
-OBJS += $(MQTT)/cbmc/stubs/IotListDouble_RemoveAll.goto
-OBJS += $(MQTT)/cbmc/stubs/IotListDouble_RemoveAllMatches.goto
+#OBJS += $(MQTT)/cbmc/stubs/IotListDouble_RemoveAll.goto
+#OBJS += $(MQTT)/cbmc/stubs/IotListDouble_RemoveAllMatches.goto
 OBJS += $(MQTT)/cbmc/stubs/IotSemaphore.goto
 OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_api.goto
 OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_helper.goto
@@ -101,4 +103,3 @@ UNWINDING += --unwindset '$(shell echo $(LOOP) | sed 's/ /,/g')'
 ################################################################
 
 include ../Makefile.common
-
