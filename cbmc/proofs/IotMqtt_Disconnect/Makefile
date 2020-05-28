@@ -1,4 +1,5 @@
-ENTRY=IotMqtt_Disconnect
+HARNESS_FILE=IotMqtt_Disconnect_harness
+HARNESS_ENTRY=harness
 
 ################################################################
 # Proof assumptions
@@ -33,55 +34,10 @@ MQTT_MAX_REMAINING_LENGTH=6
 DEF += -DMQTT_MAX_REMAINING_LENGTH=$(MQTT_MAX_REMAINING_LENGTH)
 
 ################################################################
-# Function omitted from the proof
-# See the proof harness for
-
-ABSTRACTIONS += --remove-function-body IotLog_Generic
-
-# Functions removed as manually proven to be unreachable
-ABSTRACTIONS += --remove-function-body _IotMqtt_PublishSetDup
-ABSTRACTIONS += --remove-function-body _IotMqtt_RemoveSubscriptionByPacket
-ABSTRACTIONS += --remove-function-body _IotMqtt_ScheduleOperation
-ABSTRACTIONS += --remove-function-body _checkRetryLimit
-ABSTRACTIONS += --remove-function-body _completePendingSend
-ABSTRACTIONS += --remove-function-body _scheduleCallback
-ABSTRACTIONS += --remove-function-body _scheduleNextRetry
-
-# Functions omitted for coverage
-ABSTRACTIONS += --remove-function-body IotMqtt_ReceiveCallback
-ABSTRACTIONS += --remove-function-body IotNetworkInterfaceReceive
-ABSTRACTIONS += --remove-function-body _IotMqtt_DeserializeConnack
-ABSTRACTIONS += --remove-function-body _IotMqtt_DeserializePuback
-ABSTRACTIONS += --remove-function-body _IotMqtt_DeserializeSuback
-ABSTRACTIONS += --remove-function-body _IotMqtt_DeserializeUnsuback
-ABSTRACTIONS += --remove-function-body _matchEndWildcards
-ABSTRACTIONS += --remove-function-body _matchWildcards
-ABSTRACTIONS += --remove-function-body _mqttOperation_match
-ABSTRACTIONS += --remove-function-body _mqttSubscription_setUnsubscribe
-ABSTRACTIONS += --remove-function-body _packetMatch
-ABSTRACTIONS += --remove-function-body _topicFilterMatch
-ABSTRACTIONS += --remove-function-body _topicMatch
-
-################################################################
 # Stub out list remove functions.
 
 DEF += -DCBMC_STUB_REMOVEALL=1
 DEF += -DCBMC_STUB_REMOVEALLMATCHES=1
-
-################################################################
-
-OBJS += $(ENTRY)_harness.goto
-OBJS += $(MQTT)/cbmc/proofs/mqtt_state.goto
-OBJS += $(MQTT)/cbmc/stubs/IotListDouble_RemoveAll.goto
-OBJS += $(MQTT)/cbmc/stubs/IotListDouble_RemoveAllMatches.goto
-OBJS += $(MQTT)/cbmc/stubs/IotSemaphore.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_api.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_helper.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_operation.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_network.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_serialize.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_subscription.goto
-OBJS += $(MQTT)/libraries/standard/mqtt/src/iot_mqtt_validate.goto
 
 # allow mqtt mallocs to fail for coverage
 DEF += -include mqtt_state.h
@@ -89,16 +45,47 @@ DEF += -DIotMqtt_MallocMessage=malloc_can_fail
 DEF += -DIotMqtt_MallocOperation=malloc_can_fail
 
 ################################################################
-# Loop unwinding
 
-LOOP += valid_IotMqttOperationList.0:$(OPERATION_COUNT_MAX)
-LOOP += valid_IotMqttSubscriptionList.0:$(SUBSCRIPTION_COUNT_MAX)
+REMOVE_FUNCTION_BODY += IotLog_Generic
+REMOVE_FUNCTION_BODY += IotMqtt_ReceiveCallback
+REMOVE_FUNCTION_BODY += IotNetworkInterfaceReceive
+REMOVE_FUNCTION_BODY += _IotMqtt_DeserializeConnack
+REMOVE_FUNCTION_BODY += _IotMqtt_DeserializePuback
+REMOVE_FUNCTION_BODY += _IotMqtt_DeserializeSuback
+REMOVE_FUNCTION_BODY += _IotMqtt_DeserializeUnsuback
+REMOVE_FUNCTION_BODY += _IotMqtt_PublishSetDup
+REMOVE_FUNCTION_BODY += _IotMqtt_RemoveSubscriptionByPacket
+REMOVE_FUNCTION_BODY += _IotMqtt_ScheduleOperation
+REMOVE_FUNCTION_BODY += _checkRetryLimit
+REMOVE_FUNCTION_BODY += _completePendingSend
+REMOVE_FUNCTION_BODY += _matchEndWildcards
+REMOVE_FUNCTION_BODY += _matchWildcards
+REMOVE_FUNCTION_BODY += _mqttOperation_match
+REMOVE_FUNCTION_BODY += _mqttSubscription_setUnsubscribe
+REMOVE_FUNCTION_BODY += _packetMatch
+REMOVE_FUNCTION_BODY += _scheduleCallback
+REMOVE_FUNCTION_BODY += _scheduleNextRetry
+REMOVE_FUNCTION_BODY += _topicFilterMatch
+REMOVE_FUNCTION_BODY += _topicMatch
 
-UNWINDING += --unwind 1
 
-UNWINDING += --unwindset '$(shell echo $(LOOP) | sed 's/ /,/g')'
+UNWINDSET += valid_IotMqttOperationList.0:$(OPERATION_COUNT_MAX)
+UNWINDSET += valid_IotMqttSubscriptionList.0:$(SUBSCRIPTION_COUNT_MAX)
 
-################################################################
+PROOF_SOURCES += $(PROOFDIR)/$(HARNESS_FILE).c
+PROOF_SOURCES += $(SRCDIR)/cbmc/proofs/mqtt_state.c
+PROOF_SOURCES += $(SRCDIR)/cbmc/stubs/IotListDouble_RemoveAll.c
+PROOF_SOURCES += $(SRCDIR)/cbmc/stubs/IotListDouble_RemoveAllMatches.c
+PROOF_SOURCES += $(SRCDIR)/cbmc/stubs/IotSemaphore.c
+
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_api.c
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_helper.c
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_network.c
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_operation.c
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_serialize.c
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_subscription.c
+PROJECT_SOURCES += $(SRCDIR)/libraries/standard/mqtt/src/iot_mqtt_validate.c
+
+DEFINES = $(DEF)
 
 include ../Makefile.common
-
