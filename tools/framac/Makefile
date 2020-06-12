@@ -9,6 +9,7 @@ DEFINES = \
 	-Dmqtt_EXPORTS \
 
 INCLUDES = \
+	-I. \
 	-I/usr/include \
 	-I/usr/include/x86_64-linux-gnu \
 	-I$(MQTT)/libraries/standard/mqtt/include \
@@ -27,7 +28,13 @@ FRAMAC = \
 	-cpp-extra-args="$(DEFINES) $(INCLUDES) $(CFLAGS)" \
 
 default:
-	frama-c -wp -wp-fct=MQTT_Init $(FRAMAC) init.c -then -report
+	frama-c -wp -wp-fct MQTT_Init $(FRAMAC) init.c -then -report
 
-cpp:
-	gcc -E $(DEFINES) $(INCLUDES) $(CFLAGS) init.c > init.txt
+init-cpp.c: init.c
+	gcc -E $(DEFINES) $(INCLUDES) $(CFLAGS) $< > $@
+
+init-simple.c: init-cpp.c
+	grep -v '^#' $< | clang-format  > $@
+
+simple: 
+	frama-c -wp $(FRAMAC) init-simple.c -then -report
