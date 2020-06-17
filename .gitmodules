@@ -4,3 +4,6 @@
 [submodule "libraries/3rdparty/CMock"]
 	path = libraries/3rdparty/CMock
 	url = https://github.com/ThrowTheSwitch/CMock
+[submodule "tools/aws-templates-for-cbmc-proofs"]
+	path = tools/aws-templates-for-cbmc-proofs
+	url = ssh://git.amazon.com/pkg/Aws-templates-for-cbmc-proofs
