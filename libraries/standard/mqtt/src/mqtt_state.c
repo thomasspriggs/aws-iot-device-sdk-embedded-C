@@ -559,11 +559,11 @@ static void updateRecord( MQTTPubAckInfo_t * records,
     if( shouldDelete == true )
     {
         /* Mark the record as invalid. */
-        records[ recordIndex ].packetId = MQTT_PACKET_ID_INVALID;
+      //        records[ recordIndex ].packetId = MQTT_PACKET_ID_INVALID;
     }
     else
     {
-        records[ recordIndex ].publishState = newState;
+      //   records[ recordIndex ].publishState = newState;
     }
 }
 
@@ -582,6 +582,7 @@ static uint16_t stateSelect( const MQTTContext_t * pMqttContext,
     assert( searchStates != 0U );
     assert( pCursor != NULL );
 
+#if 0
     /* Create a bit map with all the outgoing publish states. */
     UINT16_SET_BIT( outgoingStates, MQTTPublishSend );
     UINT16_SET_BIT( outgoingStates, MQTTPubAckPending );
@@ -592,13 +593,15 @@ static uint16_t stateSelect( const MQTTContext_t * pMqttContext,
     /* Only outgoing publish records need to be searched. */
     assert( ( outgoingStates & searchStates ) > 0U );
     assert( ( ~outgoingStates & searchStates ) == 0 );
+#endif
 
     records = pMqttContext->outgoingPublishRecords;
 
     while( *pCursor < MQTT_STATE_ARRAY_MAX_COUNT )
     {
         /* Check if any of the search states are present. */
-        stateCheck = UINT16_CHECK_BIT( searchStates, records[ *pCursor ].publishState ) ? true : false;
+        //stateCheck = UINT16_CHECK_BIT( searchStates, records[ *pCursor ].publishState ) ? true : false;
+      stateCheck = nondet_bool();
 
         if( stateCheck == true )
         {

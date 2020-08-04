@@ -33,6 +33,7 @@ int32_t NetworkInterfaceReceiveStub( NetworkContext_t * pNetworkContext,
                                      void * pBuffer,
                                      size_t bytesToRecv )
 {
+#if 0
     __CPROVER_assert( pBuffer != NULL,
                       "NetworkInterfaceReceiveStub pBuffer is not NULL." );
 
@@ -40,6 +41,7 @@ int32_t NetworkInterfaceReceiveStub( NetworkContext_t * pNetworkContext,
                       "NetworkInterfaceReceiveStub pBuffer is writable up to bytesToRecv." );
 
     __CPROVER_havoc_object( pBuffer );
+#endif
 
     int32_t bytesOrError;
 

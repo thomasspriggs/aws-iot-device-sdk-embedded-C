@@ -33,7 +33,7 @@ MAX_NETWORK_SEND_TRIES=3
 MQTT_RECEIVE_TIMEOUT=3
 # Please see libraries/standard/mqtt/cbmc/include/mqtt_config.h for more
 # information on these defines.
-MQTT_STATE_ARRAY_MAX_COUNT=11
+MQTT_STATE_ARRAY_MAX_COUNT=3
 MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT=3
 DEFINES += -DMQTT_RECEIVE_TIMEOUT=$(MQTT_RECEIVE_TIMEOUT)
 DEFINES += -DMAX_NETWORK_SEND_TRIES=$(MAX_NETWORK_SEND_TRIES)
@@ -42,6 +42,11 @@ INCLUDES +=
 # These functions do not coincide with the call graph of MQTT_Connect, but are
 # found by CBMC during processing in logs/MQTT_Connect_harness3.txt. We remove
 # the function bodies to improve coverage accuracy.
+REMOVE_FUNCTION_BODY += __CPROVER_file_local_mqtt_state_c_stateSelect
+REMOVE_FUNCTION_BODY += __CPROVER_file_local_mqtt_state_c_addRecord
+REMOVE_FUNCTION_BODY += __CPROVER_file_local_mqtt_state_c_findInRecord
+
+REMOVE_FUNCTION_BODY += __CPROVER_file_local_mqtt_lightweight_c_getRemainingLength
 REMOVE_FUNCTION_BODY += MQTT_ProcessLoop
 REMOVE_FUNCTION_BODY += MQTT_ReceiveLoop
 REMOVE_FUNCTION_BODY += __CPROVER_file_local_mqtt_c_handleIncomingPublish
@@ -60,7 +65,7 @@ UNWINDSET += __CPROVER_file_local_mqtt_c_receiveConnack.0:$(MQTT_MAX_CONNACK_REC
 # libraries\standard\mqtt\cbmc\stubs\network_interface_stubs.c for more
 # information.
 UNWINDSET += __CPROVER_file_local_mqtt_c_sendPacket.0:$(MAX_NETWORK_SEND_TRIES)
-# The loops are unwound 5 times because these functions divides a size_t 
+# The loops are unwound 5 times because these functions divides a size_t
 # variable by 128 until it reaches zero to stop the loop.
 # log128(SIZE_MAX) = 4.571...
 UNWINDSET += __CPROVER_file_local_mqtt_lightweight_c_encodeRemainingLength.0:5

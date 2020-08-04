@@ -1376,7 +1376,7 @@ MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
     }
     else
     {
-        ( void ) memset( pContext, 0x00, sizeof( MQTTContext_t ) );
+      //        ( void ) memset( pContext, 0x00, sizeof( MQTTContext_t ) );
 
         pContext->connectStatus = MQTTNotConnected;
         pContext->transportInterface = *pTransportInterface;

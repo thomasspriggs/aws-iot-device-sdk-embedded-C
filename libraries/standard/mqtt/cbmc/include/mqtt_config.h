@@ -41,7 +41,7 @@ struct NetworkContext
  * @note This definition must exist in order to compile. 10U is a typical value
  * used in the MQTT demos.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT              ( 10U )
+#define MQTT_STATE_ARRAY_MAX_COUNT              ( 2U)
 
 /**
  * @brief Retry count for reading CONNACK from network.
