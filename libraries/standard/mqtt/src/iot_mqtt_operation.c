@@ -472,6 +472,77 @@ static bool _completePendingSend( _mqttOperation_t * pOperation,
 
 /*-----------------------------------------------------------*/
 
+static void clear_mqttOperation_t( _mqttOperation_t * operation)
+{
+    operation->link.pPrevious = NULL;
+    operation->link.pNext = NULL;
+    operation->incomingPublish = 0;
+    operation->pMqttConnection = NULL;
+    operation->jobStorage.link.pNext = NULL;
+    operation->jobStorage.link.pPrevious = NULL;
+    operation->jobStorage.dummy2 = NULL;
+    operation->jobStorage.dummy3 = NULL;
+    operation->jobStorage.dummy4 = 0;
+    operation->jobStorage.status = 0;
+    operation->job = NULL;
+
+    // This setting of the `publish` alternative of the union `u` should be superflous and overwritten later.
+    operation->u.publish.publishInfo.qos = 0;
+    operation->u.publish.publishInfo.retain = 0;
+    operation->u.publish.publishInfo.pTopicName = NULL;
+    operation->u.publish.publishInfo.topicNameLength = 0;
+    operation->u.publish.publishInfo.pPayload = NULL;
+    operation->u.publish.publishInfo.payloadLength = 0;
+    operation->u.publish.publishInfo.retryMs = 0;
+    operation->u.publish.publishInfo.retryLimit = 0;
+    operation->u.publish.pReceivedData = NULL;
+
+    // This half of the union is initially used.
+    operation->u.operation.jobReference = 0;
+    operation->u.operation.type = 0;
+    operation->u.operation.flags = 0;
+    operation->u.operation.packetIdentifier = 0;
+    operation->u.operation.pMqttPacket = NULL;
+    operation->u.operation.pPacketIdentifierHigh = NULL;
+    operation->u.operation.packetSize = 0;
+
+    operation->u.operation.notify.callback.pCallbackContext = NULL;
+    operation->u.operation.notify.callback.function = NULL;
+
+    //TODO work this out properly.
+    //operation->u.operation.notify.waitSemaphore.__align = 0;
+
+    operation->u.operation.status = 0;
+
+    operation->u.operation.periodic.retry.count = 0;
+    operation->u.operation.periodic.retry.limit = 0;
+    operation->u.operation.periodic.retry.nextPeriodMs = 0;
+
+//    /* If incomingPublish is false, this struct is valid. */
+//    struct
+//    {
+//        /* MISRA rule 19.2 doesn't allow usage of union
+//         * but it is intentionally used here to reduce the size of struct. */
+//        /* coverity[misra_c_2012_rule_19_2_violation] */
+//        union
+//        {
+//            struct
+//            {
+//                uint32_t count;        /**< @brief Current number of retries. */
+//                uint32_t limit;        /**< @brief Maximum number of retries allowed. */
+//                uint32_t nextPeriodMs; /**< @brief Next retry period. */
+//            } retry;                   /**< @brief Additional information for PUBLISH retry. */
+//
+//            struct
+//            {
+//                uint32_t failure;      /**< @brief Flag tracking keep-alive status. */
+//                uint32_t keepAliveMs;  /**< @brief Keep-alive interval in milliseconds. Its max value (per spec) is 65,535,000. */
+//                uint32_t nextPeriodMs; /**< @brief Relative delay for next keep-alive job. */
+//            } ping;                    /**< @brief Additional information for keep-alive pings. */
+//        } periodic;                    /**< @brief Additional information for periodic operations. */
+//    } operation;
+}
+
 static IotMqttError_t _initializeOperation( _mqttConnection_t * pMqttConnection,
                                             _mqttOperation_t * pOperation,
                                             uint32_t flags,
@@ -484,7 +555,8 @@ static IotMqttError_t _initializeOperation( _mqttConnection_t * pMqttConnection,
     IotMqtt_Assert( pOperation != NULL );
 
     /* Clear the operation data. */
-    ( void ) memset( pOperation, 0x00, sizeof( _mqttOperation_t ) );
+    //( void ) memset( pOperation, 0x00, sizeof( _mqttOperation_t ) );
+    clear_mqttOperation_t(pOperation);
 
     /* Initialize some members of the new operation. */
     pOperation->pMqttConnection = pMqttConnection;
