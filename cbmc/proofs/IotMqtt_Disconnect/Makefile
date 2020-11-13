@@ -6,19 +6,19 @@ CBMCFLAGS  += --verbosity 10 --flush
 # Proof assumptions
 
 # Bound the number of subscriptions in a list (BOUND = MAX-1)
-SUBSCRIPTION_COUNT_MAX=4
+SUBSCRIPTION_COUNT_MAX=2
 DEF += -DSUBSCRIPTION_COUNT_MAX=$(SUBSCRIPTION_COUNT_MAX)
 
 # Bound the number of operations in a list (BOUND = MAX-1)
-OPERATION_COUNT_MAX=4
+OPERATION_COUNT_MAX=2
 DEF += -DOPERATION_COUNT_MAX=$(OPERATION_COUNT_MAX)
 
 # Bound the length of subscription topics (BOUND = MAX-1)
-TOPIC_LENGTH_MAX=20
+TOPIC_LENGTH_MAX=8
 DEF += -DTOPIC_LENGTH_MAX=$(TOPIC_LENGTH_MAX)
 
 # A constant that should be 2*SUBSCRIPTION_COUNT_MAX-1
-SUBSCRIPTION_LIST_MAX=7
+SUBSCRIPTION_LIST_MAX=3
 DEF += -DSUBSCRIPTION_LIST_MAX=$(SUBSCRIPTION_LIST_MAX)
 
 ################################################################
