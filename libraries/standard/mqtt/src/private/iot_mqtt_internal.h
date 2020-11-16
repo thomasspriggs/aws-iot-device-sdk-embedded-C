@@ -319,7 +319,7 @@ typedef struct _mqttOperation
     /* MISRA rule 19.2 doesn't allow usage of union
      * but it is intentionally used here to reduce the size of struct. */
     /* coverity[misra_c_2012_rule_19_2_violation] */
-    union
+    struct
     {
         /* If incomingPublish is false, this struct is valid. */
         struct
@@ -340,7 +340,7 @@ typedef struct _mqttOperation
             /* MISRA rule 19.2 doesn't allow usage of union
              * but it is intentionally used here to reduce the size of struct. */
             /* coverity[misra_c_2012_rule_19_2_violation] */
-            union
+            struct
             {
                 IotSemaphore_t waitSemaphore;   /**< @brief Semaphore to be used with @ref mqtt_function_wait. */
                 IotMqttCallbackInfo_t callback; /**< @brief User-provided callback function and parameter. */
@@ -350,7 +350,7 @@ typedef struct _mqttOperation
             /* MISRA rule 19.2 doesn't allow usage of union
              * but it is intentionally used here to reduce the size of struct. */
             /* coverity[misra_c_2012_rule_19_2_violation] */
-            union
+            struct
             {
                 struct
                 {
