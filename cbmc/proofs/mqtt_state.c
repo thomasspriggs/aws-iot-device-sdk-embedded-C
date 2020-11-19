@@ -262,9 +262,9 @@ IotMqttConnection_t ensure_IotMqttConnection_has_lists( IotMqttConnection_t pCon
     allocate_IotMqttOperationList( &pConn->pendingProcessing,
                                    OPERATION_COUNT_MAX - 1,
                                    pConn );
-    allocate_IotMqttOperationList( &pConn->pendingResponse,
-                                   OPERATION_COUNT_MAX - 1,
-                                   pConn );
+//    allocate_IotMqttOperationList( &pConn->pendingResponse,
+//                                   OPERATION_COUNT_MAX - 1,
+//                                   pConn );
     allocate_IotMqttSubscriptionList( &pConn->subscriptionList,
                                       SUBSCRIPTION_COUNT_MAX - 1 );
     return pConn;
