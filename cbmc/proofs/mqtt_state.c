@@ -177,12 +177,76 @@ IotListDouble_t * allocate_IotMqttOperationList( IotListDouble_t * pOp,
     IotListDouble_Create( pOp );
 
     size_t numElts;
-    __CPROVER_assume( numElts <= length );
+    __CPROVER_assume( numElts <= 19 );
 
     IotMqttOperation_t pElt;
 
     switch( numElts )
     {
+        case 19:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 18:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 17:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 16:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 15:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 14:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 13:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 12:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 11:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 10:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 9:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 8:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 7:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 6:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 5:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
+        case 4:
+            pElt = allocate_IotMqttOperation( NULL, pConn );
+            __CPROVER_assume( pElt );
+            IotListDouble_InsertHead( pOp, &( pElt->link ) );
         #if 3 < OPERATION_COUNT_MAX
             case 3:
                 pElt = allocate_IotMqttOperation( NULL, pConn );
