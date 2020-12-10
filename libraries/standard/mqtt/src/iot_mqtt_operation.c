@@ -638,6 +638,10 @@ IotMqttError_t _IotMqtt_CreateOperation( _mqttConnection_t * pMqttConnection,
     if( status == IOT_MQTT_SUCCESS )
     {
         status = _initializeOperation( pMqttConnection, pOperation, flags, pCallbackInfo );
+#ifdef CBMC_CREATEOPERATION_INITIALIZE_CANT_FAIL
+	__CPROVER_assert(status == IOT_MQTT_SUCCESS,
+			 "An async _initializeOperation can't fail (unwaitable)");
+#endif
     }
 
     if( status == IOT_MQTT_SUCCESS )
@@ -660,6 +664,12 @@ IotMqttError_t _IotMqtt_CreateOperation( _mqttConnection_t * pMqttConnection,
         {
             _IotMqtt_DecrementConnectionReferences( pMqttConnection );
         }
+
+#ifdef CBMC_CREATEOPERATION_UNSUCCESSFUL_STATUS_MEANS_NULL_POINTER
+	__CPROVER_assert(pOperation == NULL,
+			 "Bad status implies null pointer");
+	__CPROVER_assume(pOperation == NULL);
+#endif
 
         if( pOperation != NULL )
         {

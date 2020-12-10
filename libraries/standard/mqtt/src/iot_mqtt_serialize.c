@@ -948,6 +948,11 @@ IotMqttError_t _IotMqtt_SerializePingreq( uint8_t ** pPingreqPacket,
         0x00
     };
 
+#ifdef CBMC
+    __CPROVER_assume( pPingreq[0] == MQTT_PACKET_TYPE_PINGREQ );
+    __CPROVER_assume( pPingreq[1] == 0x00 );
+#endif
+
     /* Set the output parameters. */
     *pPingreqPacket = ( uint8_t * ) pPingreq;
     *pPacketSize = MQTT_PACKET_PINGREQ_SIZE;
@@ -955,7 +960,13 @@ IotMqttError_t _IotMqtt_SerializePingreq( uint8_t ** pPingreqPacket,
     /* Print out the PINGREQ packet for debugging purposes. */
     IotLog_PrintBuffer( "MQTT PINGREQ packet:", pPingreq, MQTT_PACKET_PINGREQ_SIZE );
 
+#ifdef CBMC_SERIALIZAPINGREQ_NONDET_RETURN
+    /* Return nondet status to improve coverage. */
+    IotMqttError_t status;
+    return status;
+#else
     return IOT_MQTT_SUCCESS;
+#endif
 }
 
 /*-----------------------------------------------------------*/
@@ -1008,6 +1019,11 @@ IotMqttError_t _IotMqtt_SerializeDisconnect( uint8_t ** pDisconnectPacket,
         MQTT_PACKET_TYPE_DISCONNECT,
         0x00
     };
+
+#ifdef CBMC
+    __CPROVER_assume( pDisconnect[0] == MQTT_PACKET_TYPE_DISCONNECT );
+    __CPROVER_assume( pDisconnect[1] == 0x00 );
+#endif
 
     /* Set the output parameters. */
     *pDisconnectPacket = ( uint8_t * ) pDisconnect;

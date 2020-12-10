@@ -1005,6 +1005,16 @@ static IotMqttError_t _sendConnectRequest( _mqttOperation_t * pOperation,
     /* Wait for the CONNECT operation to complete, i.e. wait for CONNACK. */
     status = IotMqtt_Wait( pOperation, timeoutMs );
 
+#ifdef CBMC_BACKGROUND_THREAD_SIMULATION
+    /* There is a background thread that's part of the network and changes
+     * the status from IOT_MQTT_STATUS_PENDING to IOT_MQTT_SUCCESS. This
+     * code snippet simulates the thread behavior and improves coverage. */
+    if(status == IOT_MQTT_STATUS_PENDING && nondet_bool())
+    {
+        status = IOT_MQTT_SUCCESS;
+    }
+#endif
+
     return status;
 }
 

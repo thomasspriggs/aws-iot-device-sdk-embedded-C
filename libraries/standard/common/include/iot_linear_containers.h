@@ -489,6 +489,9 @@ static inline void IotListDouble_InsertSorted( IotListDouble_t * const pList,
  * @param[in] pLink The element to remove.
  */
 /* @[declare_linear_containers_list_double_remove] */
+#ifdef CBMC_STUB_REMOVE
+void IotListDouble_Remove( IotLink_t * const pLink );
+#else
 static inline void IotListDouble_Remove( IotLink_t * const pLink )
 /* @[declare_linear_containers_list_double_remove] */
 {
@@ -503,6 +506,7 @@ static inline void IotListDouble_Remove( IotLink_t * const pLink )
     pLink->pPrevious = NULL;
     pLink->pNext = NULL;
 }
+#endif
 
 /**
  * @brief Remove the element at the head of a doubly-linked list.
@@ -564,6 +568,11 @@ static inline IotLink_t * IotListDouble_RemoveTail( const IotListDouble_t * cons
  * or its value is `0`.
  */
 /* @[declare_linear_containers_list_double_removeall] */
+#ifdef CBMC_STUB_REMOVEALL
+void IotListDouble_RemoveAll( const IotListDouble_t * const pList,
+                                            void ( *freeElement )( void * pData ),
+                                            size_t linkOffset );
+#else
 static inline void IotListDouble_RemoveAll( const IotListDouble_t * const pList,
                                             void ( *freeElement )( void * pData ),
                                             size_t linkOffset )
@@ -593,6 +602,7 @@ static inline void IotListDouble_RemoveAll( const IotListDouble_t * const pList,
         pCurrent = pNext;
     }
 }
+#endif
 
 /**
  * @brief Search a doubly-linked list for the first matching element.
@@ -639,6 +649,11 @@ static inline IotLink_t * IotListDouble_FindFirstMatch( const IotListDouble_t * 
     /* Iterate through the list to search for matches. */
     while( pCurrent != pList )
     {
+#ifdef CBMC_FINDFIRSTMATCH_MATCH_IS_NONNULL
+      __CPROVER_assert(isMatch != NULL, "FindFirstMatch called with match predicate");
+      __CPROVER_assume(isMatch != NULL);
+#endif
+
         /* Call isMatch if provided. Otherwise, compare pointers. */
         if( isMatch != NULL )
         {
@@ -719,6 +734,13 @@ static inline IotLink_t * IotListDouble_RemoveFirstMatch( const IotListDouble_t 
  * or its value is `0`.
  */
 /* @[declare_linear_containers_list_double_removeallmatches] */
+#ifdef CBMC_STUB_REMOVEALLMATCHES
+void IotListDouble_RemoveAllMatches( const IotListDouble_t * const pList,
+				     bool ( *isMatch )( const IotLink_t * const pOperationLink, void * pCompare ),
+				     void * pMatch,
+				     void ( *freeElement )( void * pData ),
+				     size_t linkOffset );
+#else
 static inline void IotListDouble_RemoveAllMatches( const IotListDouble_t * const pList,
                                                    bool ( *isMatch )( const IotLink_t * const pOperationLink, void * pCompare ),
                                                    void * pMatch,
@@ -754,6 +776,7 @@ static inline void IotListDouble_RemoveAllMatches( const IotListDouble_t * const
         }
     } while( pMatchedElement != NULL );
 }
+#endif
 
 /**
  * @brief Create a new queue.

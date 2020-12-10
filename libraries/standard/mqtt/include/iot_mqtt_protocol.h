@@ -84,7 +84,9 @@
  * All strings in a CONNECT packet are constrained to 2-byte lengths, giving a
  * maximum length smaller than the max "Remaining Length" constant above.
  */
+#ifndef MQTT_PACKET_CONNECT_MAX_SIZE
 #define MQTT_PACKET_CONNECT_MAX_SIZE                ( 327700UL )
+#endif
 
 /**
  * @brief The minimum remaining length for a QoS 0 PUBLISH.
@@ -97,7 +99,9 @@
  * @brief Per the MQTT 3.1.1 spec, the largest "Remaining Length" of an MQTT
  * packet is this value.
  */
+#ifndef MQTT_MAX_REMAINING_LENGTH
 #define MQTT_MAX_REMAINING_LENGTH                   ( 268435455UL )
+#endif
 
 /**
  * @brief The constant specifying MQTT version 3.1.1. Placed in the CONNECT packet.

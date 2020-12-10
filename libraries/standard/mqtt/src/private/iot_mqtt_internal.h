@@ -223,10 +223,13 @@
     #define IOT_MQTT_RETRY_MS_CEILING               ( 60000U )
 #endif
 /** @endcond */
-
+#ifndef MQTT_SERVER_MAX_CLIENTID_LENGTH
 #define MQTT_SERVER_MAX_CLIENTID_LENGTH                        ( ( uint16_t ) 23 )          /**< @brief Optional maximum length of client identifier specified by MQTT 3.1.1. */
+#endif
 #define MQTT_SERVER_MAX_PUBLISH_PAYLOAD_LENGTH                 ( ( size_t ) ( 268435456 ) ) /**< @brief Maximum publish payload length supported by MQTT 3.1.1. */
+#ifndef MQTT_SERVER_MAX_LWT_PAYLOAD_LENGTH
 #define MQTT_SERVER_MAX_LWT_PAYLOAD_LENGTH                     ( ( size_t ) UINT16_MAX )    /**< @brief Maximum LWT payload length supported by MQTT 3.1.1. */
+#endif
 
 /*
  * Constants related to limits defined in AWS Service Limits.
@@ -236,9 +239,15 @@
  *
  * Used to validate parameters if when connecting to an AWS IoT MQTT server.
  */
+#ifndef AWS_IOT_MQTT_SERVER_MAX_CLIENTID_LENGTH
 #define AWS_IOT_MQTT_SERVER_MAX_CLIENTID_LENGTH                ( ( uint16_t ) 128 )      /**< @brief Maximum length of client identifier accepted by AWS IoT. */
+#endif
+#ifndef AWS_IOT_MQTT_SERVER_MAX_TOPIC_LENGTH
 #define AWS_IOT_MQTT_SERVER_MAX_TOPIC_LENGTH                   ( ( uint16_t ) 256 )      /**< @brief Maximum length of topic names or filters accepted by AWS IoT. */
+#endif
+#ifndef AWS_IOT_MQTT_SERVER_MAX_TOPIC_FILTERS_PER_SUBSCRIBE
 #define AWS_IOT_MQTT_SERVER_MAX_TOPIC_FILTERS_PER_SUBSCRIBE    ( ( size_t ) 8 )          /**< @brief Maximum number of topic filters in a single SUBSCRIBE packet. */
+#endif
 #define AWS_IOT_MQTT_SERVER_MAX_PUBLISH_PAYLOAD_LENGTH         ( ( size_t ) ( 131072 ) ) /**< @brief Maximum publish payload length accepted by AWS IoT. */
 
 /*

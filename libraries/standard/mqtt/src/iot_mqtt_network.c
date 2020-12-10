@@ -256,6 +256,10 @@ static IotMqttError_t _allocateAndReceivePacket( IotNetworkConnection_t pNetwork
     IotMqtt_Assert( pMqttConnection != NULL );
     IotMqtt_Assert( pIncomingPacket != NULL );
 
+#ifdef CBMC_REMAINING_LENGTH_BOUND
+    __CPROVER_assume( pIncomingPacket->remainingLength < CBMC_REMAINING_LENGTH_BOUND );
+#endif
+
     /* Allocate a buffer for the remaining data and read the data. */
     if( pIncomingPacket->remainingLength > 0U )
     {
@@ -281,6 +285,10 @@ static IotMqttError_t _allocateAndReceivePacket( IotNetworkConnection_t pNetwork
 
         if( status == IOT_MQTT_SUCCESS )
         {
+#ifdef CBMC
+	  assert( IS_STUBBED_NETWORKIF_RECEIVE( pMqttConnection->pNetworkInterface ) );
+	  __CPROVER_assume( IS_STUBBED_NETWORKIF_RECEIVE( pMqttConnection->pNetworkInterface ) );
+#endif
             dataBytesRead = pMqttConnection->pNetworkInterface->receive( pNetworkConnection,
                                                                          pIncomingPacket->pRemainingData,
                                                                          pIncomingPacket->remainingLength );
@@ -701,6 +709,10 @@ bool _IotMqtt_GetNextByte( IotNetworkConnection_t pNetworkConnection,
     size_t bytesReceived = 0;
 
     /* Attempt to read 1 byte. */
+#ifdef CBMC
+    assert( IS_STUBBED_NETWORKIF_RECEIVE( pNetworkInterface ) );
+    __CPROVER_assume( IS_STUBBED_NETWORKIF_RECEIVE( pNetworkInterface ) );
+#endif
     bytesReceived = pNetworkInterface->receive( pNetworkConnection,
                                                 &incomingByte,
                                                 1 );
@@ -792,6 +804,10 @@ void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason
     /* Close the network connection. */
     if( closeConnection != NULL )
     {
+#ifdef CBMC
+      assert( closeConnection == IotNetworkInterfaceClose );
+    __CPROVER_assume( closeConnection == IotNetworkInterfaceClose );
+#endif
         closeStatus = closeConnection( pNetworkConnection );
 
         if( closeStatus == IOT_NETWORK_SUCCESS )
@@ -818,6 +834,10 @@ void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason
         callbackParam.mqttConnection = pMqttConnection;
         callbackParam.u.disconnectReason = disconnectReason;
 
+#ifdef CBMC
+	assert( IS_STUBBED_USER_CALLBACK( disconnectCallback ) );
+	__CPROVER_assume( IS_STUBBED_USER_CALLBACK( disconnectCallback ) );
+#endif
         disconnectCallback( pDisconnectCallbackContext,
                             &callbackParam );
     }
