@@ -1,6 +1,6 @@
 ENTRY=IotMqtt_Disconnect
 
-CBMCFLAGS  += --verbosity 10 --flush
+CBMCFLAGS  += --flush --depth 750
 
 ################################################################
 # Proof assumptions
